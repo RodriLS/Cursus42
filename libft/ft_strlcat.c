@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <stddef.h>
 
-int	static	ft_calculate_result(size_t i, size_t size, const char *src)
+static int	ft_calculate_result(size_t i, size_t size, const char *src)
 {
 	size_t	j;
 

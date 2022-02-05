@@ -13,8 +13,8 @@
 #include "libft.h"
 
 void		ft_putnbr_fd(int nb, int fd);
-void static	print_number(int digits[20], int fd);
-int static	ft_special_cases(int nb, int fd);
+static void	print_number(int digits[20], int fd);
+static int	ft_special_cases(int nb, int fd);
 
 void	ft_putnbr_fd(int nb, int fd)
 {
@@ -40,7 +40,7 @@ void	ft_putnbr_fd(int nb, int fd)
 	print_number(digits, fd);
 }
 
-int	static	ft_special_cases(int nb, int fd)
+static int	ft_special_cases(int nb, int fd)
 {
 	if (nb == 0)
 	{
@@ -55,7 +55,7 @@ int	static	ft_special_cases(int nb, int fd)
 	return (0);
 }
 
-void	static	print_number(int digits[20], int fd)
+static void	print_number(int digits[20], int fd)
 {
 	int	i;
 	int	aux;

@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlopez-s <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/28 20:06:48 by rlopez-s          #+#    #+#             */
-/*   Updated: 2022/01/29 12:32:41 by rlopez-s         ###   ########.fr       */
+/*   Created: 2022/01/23 18:53:08 by rlopez-s          #+#    #+#             */
+/*   Updated: 2022/01/28 20:24:58 by rlopez-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
-#include <stdlib.h>
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+# include <unistd.h>
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+typedef struct s_list_of_fd
 {
-	t_list	*aux;
+	char			*content;
+	int			init;
+	int			fd;
+	struct s_list_of_fd	*next_fd;
+	struct s_list_of_fd	*next;
+}					t_list_fd;
 
-	if (lst == NULL)
-		return ;
-	while (*lst != NULL)
-	{
-		aux = (*lst)->next;
-		del((*lst)->content);
-		free(*lst);
-		*lst = aux;
-	}
-}
+char *get_next_line(int fd);
+
+#endif

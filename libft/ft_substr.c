@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <stdlib.h>
 
-char	static	*return_empty(void)
+static char	*return_empty(void)
 {
 	char	*ptr;
 

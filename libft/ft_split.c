@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <stdlib.h>
 
-char	static	*ft_strdup2(const char *src, char c)
+static char	*ft_strdup2(const char *src, char c)
 {
 	char	*p;
 	int		i;
@@ -31,7 +31,7 @@ char	static	*ft_strdup2(const char *src, char c)
 	return (p);
 }
 
-int	static	get_num_of_strs(const char *str, char c)
+static int	get_num_of_strs(const char *str, char c)
 {
 	int		cont;
 
