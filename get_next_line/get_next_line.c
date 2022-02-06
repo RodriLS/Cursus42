@@ -17,8 +17,8 @@ static void	ft_freeunusednodes(int fd)
 	while (aux->fd != fd)
 	{
 		if (aux != storage)
-			aux_prev = aux_prev->next;
-		aux = aux->next;
+			aux_prev = aux_prev->next_fd;
+		aux = aux->next_fd;
 	}
 	aux_next_fd = aux->next_fd;
 	while (aux->next != NULL)
@@ -94,16 +94,20 @@ char *get_next_line(int fd)
 		actual = actual->next_fd;
 	}
 	len = 0;
+	char c;
 	while (len <= 0) //len > 0 means that we have reached a \n
 	{
 		if (actual->init == 0)
-			chrs_readed = read(fd,actual->content, BUFFER_SIZE);
-		if (chrs_readed == 0)
-			return (NULL);
+		{	chrs_readed = read(fd,actual->content, BUFFER_SIZE);
+			if (chrs_readed == 0)
+				return (NULL);
+		}
+		else
+			chrs_readed = BUFFER_SIZE;
 		i = actual->init;
-		while ((i + 1) * (chrs_readed != 0) < (chrs_readed + 1) && actual->content[i] != '\n' && actual->content[i])
+		while (i < chrs_readed && actual->content[i] != '\n' && actual->content[i])
 			i++;
-		if (actual->content[i] == '\n')
+		if (i < chrs_readed && actual->content[i] == '\n')
 			i++;
 		len = (len - i + actual->init) * (((i == chrs_readed) * 2) - 1); //update the len adding the total number of chars we have read and changing its sign if we have found a \n
 		if (len < 0) 
@@ -111,6 +115,12 @@ char *get_next_line(int fd)
 			actual->next = ft_newlstfd(fd);
 			actual = actual->next;
 		}
-	}
+/*		c = 98 + len;
+		write(1, &c, 1);
+		c = 38 + chrs_readed;
+		write(1, &c, 1);
+		c = 38 + i;
+		write(1, &c, 1);
+*/	}
 	return (ft_getline(fd, len, actual));
 }
