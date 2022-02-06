@@ -6,7 +6,7 @@
 #    By: rlopez-s <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/22 12:26:42 by rlopez-s          #+#    #+#              #
-#    Updated: 2022/01/29 13:02:34 by rlopez-s         ###   ########.fr        #
+#    Updated: 2022/02/06 15:10:41 by rlopez-s         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,23 +28,19 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	ar cr $(NAME) $(OBJS)
 
-$(OBJS): %o: %c
+$(OBJS):
 	$(CC) $(CFLAGS) $(SRCS) -c
 
 clean: 
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(BOBJ)
 
-fclean:
+fclean: clean
 	rm -f $(NAME)
 
 re:	fclean all
 
-so: 
-	$(CC) -nostartfiles -fPIC $(CFLAGS) $(SRCS) $(BSRC)
-	gcc -nostartfiles -shared -o libft.so $(OBJS) $(BOBJ)
-
 bonus:	$(BOBJ)
 	ar r $(NAME) $(BOBJ)
 
-$(BOBJ): %o: %c
+$(BOBJ):
 	$(CC) $(CFLAGS) $(BSRC) -c

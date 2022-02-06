@@ -6,7 +6,7 @@
 /*   By: rlopez-s <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 18:51:19 by rlopez-s          #+#    #+#             */
-/*   Updated: 2022/01/28 18:29:50 by rlopez-s         ###   ########.fr       */
+/*   Updated: 2022/02/06 15:05:39 by rlopez-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
@@ -59,7 +59,7 @@ char	*ft_strtrim(const char *s1, const char *set)
 	while (*end)
 		end++;
 	end--;
-	while (is_in_set(*end, set))
+	while (is_in_set(*end, set) && end >= init)
 		end--;
 	end++;
 	return (ft_strdup2((char *) init, (char *) end));
