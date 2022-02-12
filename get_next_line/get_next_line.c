@@ -5,34 +5,41 @@
 
 static  t_list_fd *storage;
 
-static void	ft_freeunusednodes(int fd)
+static void	*ft_freeunusednodes(int fd, int mode)//mode 0 to mantein the last node of the fd, mode 1 to removve every node of the fd
 {
 	t_list_fd	*aux;
 	t_list_fd	*aux_prev;
 	t_list_fd	*aux_next_fd;
 	t_list_fd	*aux_next;
+	int			first_fd;
 
+	first_fd = 1;
 	aux = storage;
 	aux_prev = storage;
 	while (aux->fd != fd)
 	{
+		first_fd = 0;
 		if (aux != storage)
 			aux_prev = aux_prev->next_fd;
 		aux = aux->next_fd;
 	}
 	aux_next_fd = aux->next_fd;
-	while (aux->next != NULL)
+	while (aux && (aux->next || mode))
 	{
 		aux_next = aux->next;
 		free(aux->content);
 		free(aux);
-		aux = aux_next;
+		aux = aux_next;	
 	}
-	if (aux_prev == storage)
+	if (mode)
+		aux = aux_next_fd;
+	if (first_fd)
 		storage = aux;
 	else
 		aux_prev->next_fd = aux;
-	aux->next_fd = aux_next_fd;		
+	if (!mode)
+		aux->next_fd = aux_next_fd;		
+	return (NULL);
 }
 
 static t_list_fd        *ft_newlstfd(int fd)
@@ -54,6 +61,7 @@ static char     *ft_getline(int fd, int len, t_list_fd *actual)
 	int     i;
 	int	offset;
 
+	//printf("%i\n", len);
 	i = 0;
 	actual = storage;
 	res = malloc(len + 1);
@@ -69,7 +77,8 @@ static char     *ft_getline(int fd, int len, t_list_fd *actual)
 	}
 	res[i] = 0;
 	actual->init = (offset + i) % BUFFER_SIZE;
-	ft_freeunusednodes(fd);
+	ft_freeunusednodes(fd, 0);
+	//system("a.out leaks");
 	return (res);
 }
 
@@ -94,13 +103,13 @@ char *get_next_line(int fd)
 		actual = actual->next_fd;
 	}
 	len = 0;
-	char c;
+	//char c;
 	while (len <= 0) //len > 0 means that we have reached a \n
 	{
 		if (actual->init == 0)
 		{	chrs_readed = read(fd,actual->content, BUFFER_SIZE);
-			if (chrs_readed == 0)
-				return (NULL);
+			if (chrs_readed <= 0)
+				return (ft_freeunusednodes(fd, 1));
 		}
 		else
 			chrs_readed = BUFFER_SIZE;
