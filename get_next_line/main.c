@@ -11,8 +11,8 @@ int	main(void)
 	char *aux;
 	int	i;
 
-	fd = open("./test_no_nl", O_RDONLY);
-	fd2 = open("./test2", O_RDONLY);
+	fd2 = open("./test3", O_RDONLY);
+	fd = open("./41_no_nl", O_RDONLY);
 	help = "a";
 	while(help != NULL)
 	{
@@ -25,7 +25,8 @@ int	main(void)
 			i++;
 		}
 		aux = help;
-		/*free(aux);
+		if(aux != NULL)
+			free(aux);
 		help = get_next_line(fd2);
 		i = 0;
 		while (help && help != 0 && help[i] != 0)
@@ -33,7 +34,7 @@ int	main(void)
 			write(1, help + i, 1);
 			i++;
 		}
-		aux = help;*/
+		aux = help;
 	}
 	free(help);
 }

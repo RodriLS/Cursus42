@@ -9,8 +9,8 @@
 /*   Updated: 2022/01/28 20:24:58 by rlopez-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 # include <unistd.h>
 
 typedef struct s_list_of_fd
