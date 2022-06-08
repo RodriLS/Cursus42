@@ -3,9 +3,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static  t_list_fd *storage;
-
-static void	*ft_freeunusednodes(int fd)
+void	*ft_freeunusednodes(int fd, t_list_fd **storage)
 {
 	t_list_fd	*aux;
 	t_list_fd	*aux_prev;
@@ -14,12 +12,12 @@ static void	*ft_freeunusednodes(int fd)
 	int			first_fd;
 
 	first_fd = 1;
-	aux = storage;
-	aux_prev = storage;
+	aux = (*storage);
+	aux_prev = (*storage);
 	while (aux->fd != fd)
 	{
 		first_fd = 0;
-		if (aux != storage)
+		if (aux != (*storage))
 			aux_prev = aux_prev->next_fd;
 		aux = aux->next_fd;
 	}
@@ -43,13 +41,13 @@ static void	*ft_freeunusednodes(int fd)
 	else
 		aux->next_fd = aux_next_fd;
 	if (first_fd)
-		storage = aux;
+		(*storage) = aux;
 	else
 		aux_prev->next_fd = aux;
 	return (NULL);
 }
 
-static t_list_fd        *ft_newlstfd(int fd)
+t_list_fd        *ft_newlstfd(int fd)
 {
 	t_list_fd       *actual;
 
@@ -63,7 +61,7 @@ static t_list_fd        *ft_newlstfd(int fd)
 	return (actual);
 }
 
-static char     *ft_getline(int fd, int len, t_list_fd *actual)
+char     *ft_getline(int fd, int len, t_list_fd *actual, t_list_fd **storage)
 {
 	char    *res;
 	int     i;
@@ -71,7 +69,7 @@ static char     *ft_getline(int fd, int len, t_list_fd *actual)
 
 	//printf("%i\n", len);
 	i = 0;
-	actual = storage;
+	actual = (*storage);
 	res = malloc(len + 1);
 	while (actual->fd != fd)
 		actual = actual->next_fd;
@@ -85,7 +83,7 @@ static char     *ft_getline(int fd, int len, t_list_fd *actual)
 	}
 	res[i] = 0;
 	actual->init = (offset + i) % BUFFER_SIZE;
-	ft_freeunusednodes(fd);
+	ft_freeunusednodes(fd, storage);
 	/*char c;
 	t_list_fd *aux;
 	aux = storage;
@@ -110,13 +108,13 @@ static char     *ft_getline(int fd, int len, t_list_fd *actual)
 	return (res);
 }
 
-t_list_fd	*get_actual_node(int fd)
+t_list_fd	*get_actual_node(int fd, t_list_fd **storage)
 {
 	t_list_fd	*actual;
 
-	if (!storage)
-                storage = ft_newlstfd(fd);
-        actual = storage;
+	if (!(*storage))
+                (*storage) = ft_newlstfd(fd);
+        actual = (*storage);
         while (actual->fd != fd && actual->next_fd)
                 actual = actual->next_fd;
         if (actual->fd != fd)
@@ -129,12 +127,13 @@ t_list_fd	*get_actual_node(int fd)
 
 char *get_next_line(int fd)
 {
-	t_list_fd       *actual;
-	int             len;
-	int             i;
+	t_list_fd       	*actual;
+	int             	len;
+	int             	i;
+	static t_list_fd	*storage;
 
 	i = 0;
-	actual = get_actual_node(fd);
+	actual = get_actual_node(fd, &storage);
 	len = 0;
 	//char c;
 	while (len <= 0) //len > 0 means that we have reached a \n
@@ -152,7 +151,7 @@ char *get_next_line(int fd)
 					len *= -1;
 					break;
 				}
-				return (ft_freeunusednodes(fd));
+				return (ft_freeunusednodes(fd, &storage));
 			}
 		}
 		i = actual->init;
@@ -171,5 +170,5 @@ char *get_next_line(int fd)
 		c = 38 + i;
 		write(1, &c, 1);
 */	}
-	return (ft_getline(fd, len, actual));
+	return (ft_getline(fd, len, actual, &storage));
 }
